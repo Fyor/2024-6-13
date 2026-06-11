@@ -1,0 +1,42 @@
+@import "tailwindcss";
+
+@theme {
+  /* Custom warm & romantic color palette */
+  --color-cream: #FDF6EC;
+  --color-parchment: #F5ECD7;
+  --color-blush: #C9848A;
+  --color-blossom: #E8B4B8;
+  --color-wine: #A05C63;
+  --color-gold: #D4A853;
+  --color-amber: #C49A3C;
+  --color-champagne: #F0D9A0;
+  --color-ink: #3D2B1F;
+
+  /* Typography */
+  --font-display: var(--font-playfair), Georgia, serif;
+  --font-body: var(--font-lato), system-ui, sans-serif;
+}
+
+:root {
+  --background: #FDF6EC;
+  --foreground: #3D2B1F;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-lato), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #F5ECD7;
+}
+::-webkit-scrollbar-thumb {
+  background: #C9848A;
+  border-radius: 3px;
+}

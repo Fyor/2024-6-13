@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import dynamic from 'next/dynamic'
 import { motion } from 'framer-motion'
 import { destinations } from '@/data/destinations'
+import FlagEmoji from '@/components/ui/FlagEmoji'
 import Link from 'next/link'
 
 const Confetti = dynamic(() => import('react-confetti'), { ssr: false })
@@ -119,11 +120,11 @@ export default function RevealScreen() {
           </svg>
 
           <motion.div
-            className="text-8xl relative z-10"
+            className="relative z-10"
             animate={{ y: [0, -14, 0], rotate: [0, 5, -5, 0] }}
             transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut', delay: 1.5 }}
           >
-            {destination.flag}
+            <FlagEmoji flag={destination.flag} size={96} />
           </motion.div>
         </motion.div>
 

@@ -2,6 +2,7 @@
 import { motion } from 'framer-motion'
 import { useRouter } from 'next/navigation'
 import type { Destination } from '@/lib/types'
+import FlagEmoji from '@/components/ui/FlagEmoji'
 
 const STAMP_THEMES: Record<string, { bg: string; text: string; mark: string }> = {
   england:        { bg: '#3D4A5C', text: '#F0EAD6', mark: '#C8102E' },
@@ -83,7 +84,7 @@ export default function PostcardBack({ destination, onClose }: Props) {
               <div key={`b${i}`} className="absolute bottom-[-4px] rounded-full bg-[#EFD9A8]" style={{ width:7, height:7, left: i*9-1 }} />
             ))}
             <div className="flex flex-col items-center justify-center h-full gap-1 px-2">
-              <span style={{ fontSize: 28 }}>{destination.flag}</span>
+              <FlagEmoji flag={destination.flag} size={28} />
               <span style={{ fontSize: 9, color: stamp.text, fontWeight: 700, textAlign: 'center', letterSpacing: '0.06em', lineHeight: 1.2 }}>
                 {destination.city.toUpperCase()}
               </span>

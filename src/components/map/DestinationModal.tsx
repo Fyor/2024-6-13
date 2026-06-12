@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import type { Destination } from '@/lib/types'
 import SimsBar from '@/components/ui/SimsBar'
 import LanguageGuide from '@/components/ui/LanguageGuide'
+import FlagEmoji from '@/components/ui/FlagEmoji'
 
 interface DestinationModalProps {
   destination: Destination | null
@@ -81,7 +82,7 @@ export default function DestinationModal({ destination, onClose }: DestinationMo
                     ✕
                   </button>
                   <div className="relative z-10">
-                    <div className="text-4xl mb-2">{destination.flag}</div>
+                    <div className="mb-2"><FlagEmoji flag={destination.flag} size={40} /></div>
                     <h2 className="font-display text-3xl text-cream font-semibold leading-tight">
                       {destination.name}
                     </h2>

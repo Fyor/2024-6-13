@@ -1,6 +1,7 @@
 'use client'
 import { useState } from 'react'
 import type { Destination } from '@/lib/types'
+import FlagEmoji from '@/components/ui/FlagEmoji'
 
 const THEMES: Record<string, { sky: string; ground: string; accent: string; textColor: string }> = {
   england:        { sky: '#6B7C93', ground: '#4A5568', accent: '#C8B88A', textColor: '#F0EAD6' },
@@ -92,7 +93,7 @@ function CssFallback({ destination }: { destination: Destination }) {
         <div className="absolute top-2 right-2">
           <div className="w-10 h-10 rounded flex items-center justify-center border border-dashed"
             style={{ borderColor: theme.accent + 'BB', background: 'rgba(0,0,0,0.25)' }}>
-            <span style={{ fontSize: 18 }}>{destination.flag}</span>
+            <FlagEmoji flag={destination.flag} size={18} />
           </div>
         </div>
       </div>

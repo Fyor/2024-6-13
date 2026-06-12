@@ -1,6 +1,7 @@
 'use client'
 import { motion } from 'framer-motion'
 import type { Destination } from '@/lib/types'
+import FlagEmoji from '@/components/ui/FlagEmoji'
 
 interface DestinationPostcardProps {
   destination: Destination
@@ -31,7 +32,7 @@ export default function DestinationPostcard({
       aria-label={`View ${destination.name} — ${destination.city}`}
     >
       <div className="bg-midnight border border-crimson/30 rounded-xl shadow-lg px-3 py-2 min-w-[78px] text-center transition-all duration-200 group-hover:border-crimson group-hover:shadow-[0_0_16px_#C41E3A44]">
-        <div className="text-xl mb-0.5">{destination.flag}</div>
+        <div className="mb-0.5"><FlagEmoji flag={destination.flag} size={20} /></div>
         <div className="text-[11px] font-body font-semibold text-cream/90 leading-tight">{destination.city}</div>
         <div className="text-[9px] font-body text-dusk leading-tight">{destination.name}</div>
       </div>

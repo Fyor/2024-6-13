@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ComposableMap, Geographies, Geography } from 'react-simple-maps'
 import { destinations } from '@/data/destinations'
+import { flagUrl } from '@/lib/flagUrl'
 
 // ── Map constants ─────────────────────────────────────────────────────────────
 const MAP_W   = 900
@@ -231,12 +232,13 @@ export default function EuropeMap({ onRevealReady }: Props) {
                     transition={{ duration: 0.4, delay: i * 0.1 }}
                     style={{ transformOrigin: `${dx}px ${dy}px` }}
                   >
+                    <image
+                      href={flagUrl(dest.flag)}
+                      x={dx - 8} y={above ? dy - 30 : dy + 0}
+                      width="16" height="16"
+                    />
                     <text
-                      x={dx} y={above ? dy - 18 : dy + 12}
-                      fontSize="13" textAnchor="middle"
-                    >{dest.flag}</text>
-                    <text
-                      x={dx} y={above ? dy - 6 : dy + 23}
+                      x={dx} y={above ? dy - 14 : dy + 22}
                       fontSize="7" fill="#FF9DB2" fillOpacity="0.85"
                       fontFamily="Georgia, serif" fontStyle="italic" textAnchor="middle"
                     >{dest.city}</text>

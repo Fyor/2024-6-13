@@ -18,6 +18,7 @@
   /* Typography */
   --font-display: var(--font-playfair), Georgia, serif;
   --font-body: var(--font-space-grotesk), system-ui, sans-serif;
+  --font-handwriting: var(--font-caveat), cursive;
 }
 
 :root {

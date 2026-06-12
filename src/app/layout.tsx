@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { Playfair_Display, Space_Grotesk } from 'next/font/google'
+import { Playfair_Display, Space_Grotesk, Caveat } from 'next/font/google'
 import './globals.css'
 
 const playfair = Playfair_Display({
@@ -17,6 +17,13 @@ const spaceGrotesk = Space_Grotesk({
   display: 'swap',
 })
 
+const caveat = Caveat({
+  variable: '--font-caveat',
+  subsets: ['latin'],
+  weight: ['400', '700'],
+  display: 'swap',
+})
+
 export const metadata: Metadata = {
   title: 'Two Years of Everything',
   description: 'A love letter in the form of a website.',
@@ -24,7 +31,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${playfair.variable} ${spaceGrotesk.variable}`}>
+    <html lang="en" className={`${playfair.variable} ${spaceGrotesk.variable} ${caveat.variable}`}>
       <body className="min-h-screen bg-void text-cream antialiased">{children}</body>
     </html>
   )

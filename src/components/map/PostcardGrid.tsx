@@ -1,6 +1,5 @@
 'use client'
 import { useState } from 'react'
-import { motion } from 'framer-motion'
 import { destinations } from '@/data/destinations'
 import PostcardCard from './PostcardCard'
 

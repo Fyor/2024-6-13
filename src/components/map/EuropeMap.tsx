@@ -50,7 +50,7 @@ const ROUTE_STAG  = 0.42
 // Auto-transition timing:
 // zoom ends ~3700ms, routes+markers done ~3700+routes_total, then +4000ms buffer
 const routesTotalMs = (destinations.length * ROUTE_STAG + ROUTE_DUR) * 1000
-const AUTO_TRANSITION_MS = 3700 + routesTotalMs + 3200
+const AUTO_TRANSITION_MS = 900 + routesTotalMs + 4000
 
 interface Props { onRevealReady: () => void }
 

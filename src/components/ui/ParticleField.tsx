@@ -157,13 +157,11 @@ export default function ParticleField({
     }
 
     // Scroll handler
-    let lastScrollY = window.scrollY
     const onScroll = () => {
       const sy = window.scrollY
       const threshold = window.innerHeight * 0.15
       if (sy > threshold && !stateRef.current.scattered) triggerScatter()
       if (sy < 20 && stateRef.current.scattered) triggerReform()
-      lastScrollY = sy
     }
     window.addEventListener('scroll', onScroll, { passive: true })
 

@@ -117,20 +117,31 @@ function CssFallback({ destination }: { destination: Destination }) {
   )
 }
 
+// All candidate filenames to try for each destination (in order)
+const IMAGE_CANDIDATES: Record<string, string[]> = {
+  'north-sweden': ['north-sweden', 'sweden', 'kiruna', 'northern-sweden'],
+}
+function getCandidates(id: string) {
+  return IMAGE_CANDIDATES[id] ?? [id]
+}
+
 interface Props { destination: Destination }
 
-// Try png → jpg → CSS illustration
+// Try every candidate slug × [png, jpg], then CSS fallback
 export default function PostcardFront({ destination }: Props) {
-  const [attempt, setAttempt] = useState<'png' | 'jpg' | 'css'>('png')
+  const candidates = getCandidates(destination.id)
+  // Flat list: [slug0.png, slug0.jpg, slug1.png, slug1.jpg, ...]
+  const srcs = candidates.flatMap(s => [`/postcards/${s}.png`, `/postcards/${s}.jpg`])
+  const [idx, setIdx] = useState(0)
 
-  if (attempt !== 'css') {
+  if (idx < srcs.length) {
     return (
       <div className="relative w-full h-full overflow-hidden" style={{ borderRadius: 'inherit' }}>
         <img
-          src={`/postcards/${destination.id}.${attempt}`}
+          src={srcs[idx]}
           alt={`${destination.city}, ${destination.name}`}
           className="w-full h-full object-cover"
-          onError={() => setAttempt(attempt === 'png' ? 'jpg' : 'css')}
+          onError={() => setIdx(i => i + 1)}
           draggable={false}
         />
       </div>

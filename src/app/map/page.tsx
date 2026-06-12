@@ -1,11 +1,8 @@
 'use client'
 import { useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import dynamic from 'next/dynamic'
+import EuropeMap from '@/components/map/EuropeMap'
 import PostcardGrid from '@/components/map/PostcardGrid'
-
-// Leaflet requires the browser — never render EuropeMap during SSR
-const EuropeMap = dynamic(() => import('@/components/map/EuropeMap'), { ssr: false })
 
 type Phase = 'map' | 'postcards'
 

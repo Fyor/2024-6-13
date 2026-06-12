@@ -13,29 +13,23 @@ interface DestinationModalProps {
 
 const ratingConfig = [
   { key: 'food', label: 'Food & Gluten-free', colorClass: 'bg-gold' },
-  { key: 'culture', label: 'Culture & Sightseeing', colorClass: 'bg-blush' },
-  { key: 'activities', label: 'Activities', colorClass: 'bg-amber' },
-  { key: 'romance', label: 'Romance', colorClass: 'bg-wine' },
-  { key: 'ease', label: 'Ease of Travel', colorClass: 'bg-champagne' },
+  { key: 'culture', label: 'Culture & Sightseeing', colorClass: 'bg-crimson' },
+  { key: 'activities', label: 'Activities', colorClass: 'bg-rose-red' },
+  { key: 'romance', label: 'Romance', colorClass: 'bg-petal' },
+  { key: 'ease', label: 'Ease of Travel', colorClass: 'bg-ember' },
 ] as const
 
 export default function DestinationModal({ destination, onClose }: DestinationModalProps) {
   const router = useRouter()
 
-  // Close on Escape
   useEffect(() => {
     const handler = (e: KeyboardEvent) => e.key === 'Escape' && onClose()
     window.addEventListener('keydown', handler)
     return () => window.removeEventListener('keydown', handler)
   }, [onClose])
 
-  // Prevent background scroll when modal open
   useEffect(() => {
-    if (destination) {
-      document.body.style.overflow = 'hidden'
-    } else {
-      document.body.style.overflow = ''
-    }
+    document.body.style.overflow = destination ? 'hidden' : ''
     return () => { document.body.style.overflow = '' }
   }, [destination])
 
@@ -43,9 +37,8 @@ export default function DestinationModal({ destination, onClose }: DestinationMo
     <AnimatePresence>
       {destination && (
         <>
-          {/* Backdrop */}
           <motion.div
-            className="fixed inset-0 bg-ink/40 backdrop-blur-sm z-40"
+            className="fixed inset-0 bg-void/80 backdrop-blur-sm z-40"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -53,11 +46,10 @@ export default function DestinationModal({ destination, onClose }: DestinationMo
             aria-hidden="true"
           />
 
-          {/* Modal panel */}
           <motion.div
             role="dialog"
             aria-modal="true"
-            aria-label={`${destination.name} — ${destination.city}`}
+            aria-label={`${destination.name}`}
             className="fixed inset-0 z-50 overflow-y-auto"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -65,41 +57,52 @@ export default function DestinationModal({ destination, onClose }: DestinationMo
           >
             <div className="min-h-full flex items-start justify-center p-4 md:p-8">
               <motion.div
-                className="w-full max-w-2xl bg-cream rounded-2xl shadow-2xl overflow-hidden relative"
-                initial={{ scale: 0.93, y: 20 }}
+                className="w-full max-w-2xl bg-midnight rounded-2xl shadow-2xl overflow-hidden relative border border-wine/30"
+                style={{ boxShadow: '0 0 60px #C41E3A15, 0 20px 80px #00000080' }}
+                initial={{ scale: 0.92, y: 24 }}
                 animate={{ scale: 1, y: 0 }}
-                exit={{ scale: 0.93, y: 20 }}
-                transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+                exit={{ scale: 0.92, y: 24 }}
+                transition={{ duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
                 onClick={(e) => e.stopPropagation()}
               >
-                {/* Hero */}
-                <div className={`h-52 bg-gradient-to-br ${destination.coverColor} relative flex items-end p-6`}>
+                {/* Hero gradient */}
+                <div
+                  className={`h-52 bg-gradient-to-br ${destination.coverColor} relative flex items-end p-6`}
+                >
+                  <div
+                    className="absolute inset-0 opacity-60"
+                    style={{ background: 'linear-gradient(to bottom, transparent 30%, #1A0510 100%)' }}
+                  />
                   <button
                     onClick={onClose}
-                    className="absolute top-4 right-4 w-8 h-8 rounded-full bg-ink/20 hover:bg-ink/30 flex items-center justify-center text-cream transition-colors"
+                    className="absolute top-4 right-4 w-8 h-8 rounded-full bg-void/40 border border-cream/10 hover:bg-void/70 flex items-center justify-center text-cream/60 hover:text-cream transition-all"
                     aria-label="Close"
                   >
                     ✕
                   </button>
-                  <div>
-                    <div className="text-5xl mb-2">{destination.flag}</div>
+                  <div className="relative z-10">
+                    <div className="text-4xl mb-2">{destination.flag}</div>
                     <h2 className="font-display text-3xl text-cream font-semibold leading-tight">
                       {destination.name}
                     </h2>
-                    <p className="text-cream/80 font-body text-sm">{destination.city}</p>
+                    <p className="text-ash/70 font-body text-sm tracking-wide">{destination.city}</p>
                   </div>
                 </div>
 
                 <div className="p-6 space-y-8">
-                  {/* Tagline & description */}
+                  {/* Tagline & desc */}
                   <div>
-                    <p className="font-display italic text-xl text-blush mb-3">{destination.tagline}</p>
-                    <p className="font-body text-ink/70 leading-relaxed text-sm">{destination.description}</p>
+                    <p className="font-display italic text-xl text-petal mb-3">{destination.tagline}</p>
+                    <p className="font-body text-ash/70 leading-relaxed text-sm tracking-[0.015em]">
+                      {destination.description}
+                    </p>
                   </div>
 
-                  {/* Sims-style rating bars */}
+                  {/* Sims bars */}
                   <div>
-                    <h3 className="font-display text-lg text-ink mb-4">At a glance</h3>
+                    <p className="text-[10px] uppercase tracking-[0.2em] text-dusk font-body mb-4">
+                      At a glance
+                    </p>
                     {ratingConfig.map((r, i) => (
                       <SimsBar
                         key={r.key}
@@ -113,11 +116,13 @@ export default function DestinationModal({ destination, onClose }: DestinationMo
 
                   {/* Activities */}
                   <div>
-                    <h3 className="font-display text-lg text-ink mb-3">Things to do together</h3>
-                    <ul className="space-y-2">
+                    <p className="text-[10px] uppercase tracking-[0.2em] text-dusk font-body mb-4">
+                      Things to do together
+                    </p>
+                    <ul className="space-y-2.5">
                       {destination.activities.map((act) => (
-                        <li key={act} className="flex items-start gap-2 text-sm font-body text-ink/70">
-                          <span className="text-blush mt-0.5 flex-shrink-0">✦</span>
+                        <li key={act} className="flex items-start gap-2.5 text-sm font-body text-ash/70">
+                          <span className="text-crimson/60 mt-0.5 flex-shrink-0 text-xs">✦</span>
                           {act}
                         </li>
                       ))}
@@ -126,11 +131,13 @@ export default function DestinationModal({ destination, onClose }: DestinationMo
 
                   {/* Food */}
                   <div>
-                    <h3 className="font-display text-lg text-ink mb-3">Where to eat</h3>
-                    <ul className="space-y-2">
+                    <p className="text-[10px] uppercase tracking-[0.2em] text-dusk font-body mb-4">
+                      Where to eat
+                    </p>
+                    <ul className="space-y-2.5">
                       {destination.foodHighlights.map((food) => (
-                        <li key={food} className="flex items-start gap-2 text-sm font-body text-ink/70">
-                          <span className="text-gold mt-0.5 flex-shrink-0">✦</span>
+                        <li key={food} className="flex items-start gap-2.5 text-sm font-body text-ash/70">
+                          <span className="text-gold/60 mt-0.5 flex-shrink-0 text-xs">✦</span>
                           {food}
                         </li>
                       ))}
@@ -139,17 +146,21 @@ export default function DestinationModal({ destination, onClose }: DestinationMo
 
                   {/* Language guide */}
                   <div>
-                    <h3 className="font-display text-lg text-ink mb-3">Allergy phrases</h3>
+                    <p className="text-[10px] uppercase tracking-[0.2em] text-dusk font-body mb-4">
+                      Allergy phrases
+                    </p>
                     <LanguageGuide guide={destination.languageGuide} />
                   </div>
 
                   {/* CTA */}
-                  <button
+                  <motion.button
                     onClick={() => router.push(`/reveal?dest=${destination.id}`)}
-                    className="w-full py-4 rounded-xl bg-gradient-to-r from-blush to-wine text-cream font-display text-lg tracking-wide hover:opacity-90 active:scale-98 transition-all duration-200 shadow-md"
+                    className="w-full py-4 rounded-2xl border border-crimson bg-crimson/10 text-cream font-body text-sm font-semibold uppercase tracking-[0.15em] hover:bg-crimson hover:shadow-[0_0_30px_#C41E3A60] active:scale-98 transition-all duration-300"
+                    whileHover={{ scale: 1.01 }}
+                    whileTap={{ scale: 0.98 }}
                   >
-                    Choose {destination.city}! ✦
-                  </button>
+                    Choose {destination.city} ✦
+                  </motion.button>
                 </div>
               </motion.div>
             </div>

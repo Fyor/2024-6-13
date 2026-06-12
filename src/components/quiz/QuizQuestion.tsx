@@ -6,69 +6,91 @@ interface QuizQuestionProps {
   question: QuizQuestion
   onAnswer: (value: string) => void
   selected: string | null
+  step: number
 }
 
-export default function QuizQuestionCard({ question, onAnswer, selected }: QuizQuestionProps) {
+export default function QuizQuestionCard({ question, onAnswer, selected, step }: QuizQuestionProps) {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center px-6 py-16">
-      <div className="w-full max-w-xl">
-        <motion.p
-          className="text-xs uppercase tracking-[0.3em] text-blush/60 font-body text-center mb-6"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.1 }}
-        >
+    <div className="min-h-screen flex flex-col items-center justify-center px-6 py-16 relative">
+      {/* Subtle top eyebrow */}
+      <motion.div
+        className="mb-12 flex items-center gap-3"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.05, duration: 0.6 }}
+      >
+        <div className="w-5 h-px bg-crimson/40" />
+        <p className="text-[11px] uppercase tracking-[0.25em] text-dusk font-body font-semibold">
           {question.subtext}
-        </motion.p>
+        </p>
+        <div className="w-5 h-px bg-crimson/40" />
+      </motion.div>
 
-        <motion.h2
-          className="font-display text-3xl md:text-4xl text-ink text-center leading-snug mb-12"
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2, duration: 0.5 }}
-        >
-          {question.question}
-        </motion.h2>
+      {/* Question */}
+      <motion.h2
+        className="font-display text-3xl md:text-5xl text-cream text-center leading-snug mb-14 max-w-xl"
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.12, duration: 0.6 }}
+      >
+        {question.question}
+      </motion.h2>
 
-        <motion.div
-          className="grid grid-cols-1 sm:grid-cols-2 gap-4"
+      {/* Options */}
+      <motion.div
+        className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full max-w-lg"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.22, duration: 0.5 }}
+      >
+        {question.options.map((option, i) => {
+          const isSelected = selected === option.value
+          return (
+            <motion.button
+              key={option.value}
+              onClick={() => onAnswer(option.value)}
+              className={`
+                relative p-5 rounded-2xl border text-left font-body text-sm font-medium tracking-wide
+                transition-all duration-250 overflow-hidden
+                ${
+                  isSelected
+                    ? 'border-crimson bg-crimson/10 text-cream'
+                    : 'border-wine/50 bg-midnight/50 text-ash hover:border-crimson/50 hover:bg-midnight hover:text-cream'
+                }
+              `}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.28 + i * 0.07 }}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.97 }}
+            >
+              {/* Glow on selected */}
+              {isSelected && (
+                <motion.div
+                  className="absolute inset-0 rounded-2xl"
+                  style={{ boxShadow: '0 0 20px #C41E3A44 inset' }}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.3 }}
+                />
+              )}
+              <span className="relative z-10">{option.label}</span>
+            </motion.button>
+          )
+        })}
+      </motion.div>
+
+      {/* Step hint for increasing tension */}
+      {step >= 2 && (
+        <motion.p
+          className="mt-10 text-xs text-crimson/40 font-body italic"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.3, duration: 0.5 }}
+          transition={{ delay: 0.8 }}
         >
-          {question.options.map((option, i) => {
-            const isSelected = selected === option.value
-            return (
-              <motion.button
-                key={option.value}
-                onClick={() => onAnswer(option.value)}
-                className={`
-                  relative p-5 rounded-xl border text-left font-body text-base transition-all duration-200
-                  ${
-                    isSelected
-                      ? 'border-gold bg-gold/10 text-ink shadow-md'
-                      : 'border-parchment bg-parchment/60 text-ink/70 hover:border-blush/40 hover:bg-blossom/10 hover:text-ink'
-                  }
-                `}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.35 + i * 0.07 }}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-              >
-                {isSelected && (
-                  <motion.div
-                    className="absolute inset-0 rounded-xl border-2 border-gold"
-                    layoutId="selection"
-                    transition={{ duration: 0.2 }}
-                  />
-                )}
-                <span className="relative z-10">{option.label}</span>
-              </motion.button>
-            )
-          })}
-        </motion.div>
-      </div>
+          {step === 2 ? '...are you starting to see it?' : 'something is definitely happening.'}
+        </motion.p>
+      )}
     </div>
   )
 }

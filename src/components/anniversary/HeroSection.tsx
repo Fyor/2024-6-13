@@ -1,64 +1,87 @@
 'use client'
 import { motion } from 'framer-motion'
+import dynamic from 'next/dynamic'
+
+const ParticleField = dynamic(() => import('@/components/ui/ParticleField'), { ssr: false })
 
 export default function HeroSection() {
   return (
-    <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden">
-      {/* Background gradient placeholder – replace with a real couple photo */}
-      <div
-        className="absolute inset-0 bg-gradient-to-br from-blossom/60 via-champagne/80 to-cream"
-        style={{ backgroundImage: "url('/images/hero.jpg')" }}
-      >
-        <div className="absolute inset-0 bg-gradient-to-br from-blush/20 via-champagne/40 to-cream/80" />
+    <section className="relative min-h-screen flex items-center overflow-hidden bg-void">
+      {/* Particle constellation — right half dominant */}
+      <div className="absolute inset-0 z-0">
+        <ParticleField count={520} heartSide="right" className="opacity-90" />
       </div>
 
-      {/* Decorative circles */}
-      <div className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full bg-blossom/10 blur-3xl pointer-events-none" />
-      <div className="absolute bottom-1/3 right-1/4 w-80 h-80 rounded-full bg-champagne/20 blur-3xl pointer-events-none" />
+      {/* Subtle radial vignette from left */}
+      <div
+        className="absolute inset-0 z-10 pointer-events-none"
+        style={{
+          background:
+            'radial-gradient(ellipse 60% 80% at 20% 50%, #0D030888 0%, transparent 70%)',
+        }}
+      />
 
-      <motion.div
-        className="relative z-10 text-center px-6 max-w-3xl"
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
-      >
+      {/* A faint glow behind the text */}
+      <div
+        className="absolute left-0 top-1/2 -translate-y-1/2 w-80 h-80 rounded-full pointer-events-none z-10"
+        style={{
+          background: 'radial-gradient(circle, #C41E3A18 0%, transparent 70%)',
+          filter: 'blur(40px)',
+        }}
+      />
+
+      {/* Text block — left column, Dala-style layout */}
+      <div className="relative z-20 px-8 md:px-16 lg:px-24 max-w-xl">
         <motion.p
-          className="text-sm uppercase tracking-[0.3em] text-blush/70 font-body mb-6"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.4, duration: 1 }}
+          className="text-xs uppercase tracking-[0.35em] text-crimson font-body font-semibold mb-8"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4, duration: 0.7 }}
         >
-          13 June 2024 — 13 June 2026
+          June 13 · Two Years
         </motion.p>
 
         <motion.h1
-          className="font-display text-7xl md:text-9xl text-ink leading-none mb-4"
+          className="font-display text-[clamp(64px,12vw,120px)] text-cream font-semibold leading-[0.87] tracking-[-0.03em] mb-6"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6, duration: 1 }}
+          transition={{ delay: 0.6, duration: 0.9 }}
         >
-          Two Years
+          Two
+          <br />
+          <span className="font-display italic font-normal text-[0.85em] text-petal/90">
+            years
+          </span>
+          <br />
+          <span className="font-display text-[0.45em] font-normal italic text-cream/40 tracking-[0.02em]">
+            of everything
+          </span>
         </motion.h1>
 
         <motion.p
-          className="font-display italic text-3xl md:text-4xl text-ink/60"
+          className="font-body text-base text-ash leading-relaxed max-w-xs mb-10 tracking-[0.02em]"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.9, duration: 1 }}
+          transition={{ delay: 0.9, duration: 0.8 }}
         >
-          of everything
+          Every moment. Every laugh. Every late night. Every quiet morning.
+          This is for you.
         </motion.p>
-      </motion.div>
 
-      <motion.div
-        className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.4, duration: 1 }}
-      >
-        <span className="text-xs text-ink/30 font-body tracking-widest uppercase">Scroll</span>
-        <div className="w-px h-12 bg-gradient-to-b from-ink/20 to-transparent" />
-      </motion.div>
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.2, duration: 0.6 }}
+        >
+          <div className="inline-flex items-center gap-2 text-dusk font-body text-sm tracking-wide">
+            <div className="w-8 h-px bg-crimson/50" />
+            scroll to remember
+          </div>
+        </motion.div>
+      </div>
+
+      {/* Bottom fade */}
+      <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-void to-transparent z-20 pointer-events-none" />
     </section>
   )
 }

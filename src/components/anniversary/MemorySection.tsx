@@ -1,11 +1,15 @@
 'use client'
 import { motion } from 'framer-motion'
+import dynamic from 'next/dynamic'
+
+const FloatingPetals = dynamic(() => import('@/components/ui/FloatingPetals'), { ssr: false })
 
 interface MemorySectionProps {
   caption: string
   subcaption?: string
   align?: 'left' | 'right'
   gradientFrom: string
+  gradientVia?: string
   gradientTo: string
   index: number
 }
@@ -15,52 +19,79 @@ export default function MemorySection({
   subcaption,
   align = 'left',
   gradientFrom,
+  gradientVia,
   gradientTo,
   index,
 }: MemorySectionProps) {
   const isLeft = align === 'left'
 
   return (
-    <motion.section
-      className="py-20 px-6 md:px-12 max-w-5xl mx-auto"
-      initial={{ opacity: 0, y: 40 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-80px' }}
-      transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-    >
-      <div
+    <section className="relative py-24 px-6 md:px-12 max-w-5xl mx-auto overflow-hidden">
+      <FloatingPetals count={6} />
+
+      <motion.div
         className={`flex flex-col ${isLeft ? 'md:flex-row' : 'md:flex-row-reverse'} gap-10 md:gap-16 items-center`}
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: '-80px' }}
+        transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
       >
         {/* Photo placeholder */}
-        <div className="w-full md:w-1/2 flex-shrink-0">
+        <motion.div
+          className="w-full md:w-1/2 flex-shrink-0"
+          initial={{ opacity: 0, scale: 0.95 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{ duration: 0.8, delay: 0.1 }}
+        >
           <div
-            className={`aspect-[4/3] rounded-2xl bg-gradient-to-br ${gradientFrom} ${gradientTo} shadow-lg relative overflow-hidden`}
+            className={`aspect-[4/3] rounded-2xl bg-gradient-to-br ${gradientFrom} ${gradientVia ?? ''} ${gradientTo} relative overflow-hidden border border-wine/20`}
           >
             <img
               src={`/images/memory-${index + 1}.jpg`}
               alt=""
               className="absolute inset-0 w-full h-full object-cover"
-              onError={(e) => {
-                ;(e.target as HTMLImageElement).style.display = 'none'
+              onError={(e) => { ;(e.target as HTMLImageElement).style.display = 'none' }}
+            />
+            {/* Grain overlay */}
+            <div
+              className="absolute inset-0 opacity-30"
+              style={{
+                backgroundImage:
+                  'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 256 256\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noise\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.9\' numOctaves=\'4\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noise)\' opacity=\'0.4\'/%3E%3C/svg%3E")',
+                mixBlendMode: 'overlay',
               }}
             />
-            <div className="absolute inset-0 bg-gradient-to-tr from-ink/5 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-tr from-void/30 to-transparent" />
+
+            {/* Memory number badge */}
+            <div className="absolute top-4 left-4 text-[10px] uppercase tracking-[0.2em] text-crimson/70 font-body border border-crimson/20 rounded-full px-3 py-1">
+              {String(index + 1).padStart(2, '0')}
+            </div>
           </div>
-        </div>
+        </motion.div>
 
         {/* Text */}
-        <div className={`w-full md:w-1/2 ${isLeft ? 'md:text-left' : 'md:text-right'}`}>
-          <p className="text-xs uppercase tracking-[0.25em] text-blush/60 font-body mb-3">
-            Memory #{(index + 1).toString().padStart(2, '0')}
-          </p>
-          <h2 className="font-display italic text-3xl md:text-4xl text-ink leading-snug mb-4">
+        <motion.div
+          className={`w-full md:w-1/2 ${isLeft ? 'md:text-left' : 'md:text-right'}`}
+          initial={{ opacity: 0, x: isLeft ? 20 : -20 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+        >
+          <div
+            className={`w-10 h-px bg-crimson/40 mb-6 ${isLeft ? '' : 'ml-auto'}`}
+          />
+          <h2 className="font-display italic text-3xl md:text-4xl text-cream leading-snug mb-5">
             {caption}
           </h2>
           {subcaption && (
-            <p className="font-body text-ink/50 text-base leading-relaxed">{subcaption}</p>
+            <p className="font-body text-ash/70 text-base leading-relaxed tracking-[0.015em]">
+              {subcaption}
+            </p>
           )}
-        </div>
-      </div>
-    </motion.section>
+        </motion.div>
+      </motion.div>
+    </section>
   )
 }

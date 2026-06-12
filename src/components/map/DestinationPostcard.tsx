@@ -26,21 +26,17 @@ export default function DestinationPostcard({
       }}
       initial={{ scale: 0, opacity: 0 }}
       animate={visible ? { scale: 1, opacity: 1 } : { scale: 0, opacity: 0 }}
-      transition={{
-        type: 'spring',
-        stiffness: 260,
-        damping: 20,
-        delay,
-      }}
-      whileHover={{ scale: 1.1, zIndex: 20 }}
+      transition={{ type: 'spring', stiffness: 240, damping: 18, delay }}
+      whileHover={{ scale: 1.12, zIndex: 20 }}
       aria-label={`View ${destination.name} — ${destination.city}`}
     >
-      <div className="bg-cream border border-blush/30 rounded-lg shadow-lg px-3 py-2 min-w-[80px] text-center transition-shadow group-hover:shadow-xl group-hover:border-gold/60">
-        <div className="text-2xl mb-0.5">{destination.flag}</div>
-        <div className="text-xs font-body font-bold text-ink/80 leading-tight">{destination.city}</div>
-        <div className="text-[10px] font-body text-ink/40 leading-tight">{destination.name}</div>
+      <div className="bg-midnight border border-crimson/30 rounded-xl shadow-lg px-3 py-2 min-w-[78px] text-center transition-all duration-200 group-hover:border-crimson group-hover:shadow-[0_0_16px_#C41E3A44]">
+        <div className="text-xl mb-0.5">{destination.flag}</div>
+        <div className="text-[11px] font-body font-semibold text-cream/90 leading-tight">{destination.city}</div>
+        <div className="text-[9px] font-body text-dusk leading-tight">{destination.name}</div>
       </div>
-      <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-cream border-r border-b border-blush/30 rotate-45 group-hover:border-gold/60" />
+      {/* Connector arrow */}
+      <div className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-2 h-2 bg-midnight border-r border-b border-crimson/30 rotate-45 group-hover:border-crimson" />
     </motion.button>
   )
 }

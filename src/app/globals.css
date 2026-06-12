@@ -1,42 +1,74 @@
 @import "tailwindcss";
 
 @theme {
-  /* Custom warm & romantic color palette */
-  --color-cream: #FDF6EC;
-  --color-parchment: #F5ECD7;
-  --color-blush: #C9848A;
-  --color-blossom: #E8B4B8;
-  --color-wine: #A05C63;
+  /* Dark romantic palette — flowers & deep love */
+  --color-void: #0D0308;
+  --color-midnight: #1A0510;
+  --color-crimson: #C41E3A;
+  --color-rose-red: #E63950;
+  --color-petal: #FF9DB2;
   --color-gold: #D4A853;
-  --color-amber: #C49A3C;
-  --color-champagne: #F0D9A0;
-  --color-ink: #3D2B1F;
+  --color-ember: #FF6B4A;
+  --color-cream: #FFF8F0;
+  --color-dusk: #8B5060;
+  --color-ash: #C9A8B0;
+  --color-wine: #5C0E1A;
+  --color-deep-wine: #3A0810;
 
   /* Typography */
   --font-display: var(--font-playfair), Georgia, serif;
-  --font-body: var(--font-lato), system-ui, sans-serif;
+  --font-body: var(--font-space-grotesk), system-ui, sans-serif;
 }
 
 :root {
-  --background: #FDF6EC;
-  --foreground: #3D2B1F;
+  --background: #0D0308;
+  --foreground: #FFF8F0;
 }
 
 body {
   background-color: var(--background);
   color: var(--foreground);
-  font-family: var(--font-lato), system-ui, sans-serif;
+  font-family: var(--font-space-grotesk), system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 
-/* Scrollbar styling */
-::-webkit-scrollbar {
-  width: 6px;
+/* Scrollbar */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: #1A0510; }
+::-webkit-scrollbar-thumb { background: #C41E3A; border-radius: 2px; }
+
+/* Petal fall animation */
+@keyframes petal-fall {
+  0%   { transform: translateY(-40px) rotate(0deg) translateX(0px); opacity: 0; }
+  8%   { opacity: 0.7; }
+  90%  { opacity: 0.3; }
+  100% { transform: translateY(110vh) rotate(540deg) translateX(60px); opacity: 0; }
 }
-::-webkit-scrollbar-track {
-  background: #F5ECD7;
+
+@keyframes petal-sway {
+  0%, 100% { margin-left: 0px; }
+  25%       { margin-left: 20px; }
+  75%       { margin-left: -20px; }
 }
-::-webkit-scrollbar-thumb {
-  background: #C9848A;
-  border-radius: 3px;
+
+@keyframes float-up {
+  0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0.4; }
+  50%       { transform: translateY(-18px) rotate(8deg); opacity: 0.8; }
 }
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 8px #C41E3A44; }
+  50%       { box-shadow: 0 0 28px #C41E3A99, 0 0 60px #C41E3A33; }
+}
+
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+.animate-petal-fall {
+  animation: petal-fall linear infinite, petal-sway ease-in-out infinite;
+}
+
+.animate-float-up { animation: float-up 3s ease-in-out infinite; }
+.animate-pulse-glow { animation: pulse-glow 2.5s ease-in-out infinite; }

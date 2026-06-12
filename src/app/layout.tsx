@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { Playfair_Display, Lato } from 'next/font/google'
+import { Playfair_Display, Space_Grotesk } from 'next/font/google'
 import './globals.css'
 
 const playfair = Playfair_Display({
@@ -10,10 +10,10 @@ const playfair = Playfair_Display({
   display: 'swap',
 })
 
-const lato = Lato({
-  variable: '--font-lato',
+const spaceGrotesk = Space_Grotesk({
+  variable: '--font-space-grotesk',
   subsets: ['latin'],
-  weight: ['300', '400'],
+  weight: ['300', '400', '500', '600'],
   display: 'swap',
 })
 
@@ -22,14 +22,10 @@ export const metadata: Metadata = {
   description: 'A love letter in the form of a website.',
 }
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode
-}>) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${playfair.variable} ${lato.variable}`}>
-      <body className="min-h-screen bg-cream text-ink antialiased">{children}</body>
+    <html lang="en" className={`${playfair.variable} ${spaceGrotesk.variable}`}>
+      <body className="min-h-screen bg-void text-cream antialiased">{children}</body>
     </html>
   )
 }

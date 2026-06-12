@@ -60,7 +60,7 @@ export default function HeroSection() {
           </span>
           <br />
           <span className="font-display text-[0.45em] font-normal italic text-cream/40 tracking-[0.02em]">
-            of everything
+            of us
           </span>
         </motion.h1>
 
@@ -70,8 +70,7 @@ export default function HeroSection() {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.9, duration: 0.8 }}
         >
-          Every moment. Every laugh. Every late night. Every quiet morning.
-          This is for you.
+          This time has been so precious, but has also flown by. I can&apos;t wait for many more years to come. This little surprise is for you, my adelillan
         </motion.p>
 
         <motion.div

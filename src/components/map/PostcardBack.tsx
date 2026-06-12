@@ -122,28 +122,6 @@ export default function PostcardBack({ destination, onClose }: Props) {
               {destination.description}
             </p>
 
-            {/* Rating bars */}
-            <div className="mb-3">
-              <p style={{ fontSize: 10, color: '#8A6A3A', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: 6 }}>
-                At a glance
-              </p>
-              {BARS.map(({ key, label, color }, idx) => (
-                <div key={key} className="flex items-center gap-2 mb-2">
-                  <span style={{ fontSize: 11, color: '#6A4A2A', width: 64, flexShrink: 0, fontStyle: 'italic' }}>{label}</span>
-                  <div className="flex-1 rounded-full" style={{ height: 7, background: '#D4B89055' }}>
-                    <motion.div
-                      className="h-full rounded-full"
-                      style={{ background: color }}
-                      initial={{ width: 0 }}
-                      animate={{ width: `${destination.ratings[key]}%` }}
-                      transition={{ duration: 0.9, delay: 0.3 + idx * 0.1, ease: 'easeOut' }}
-                    />
-                  </div>
-                  <span style={{ fontSize: 11, color: '#8A6A3A', width: 26, textAlign: 'right' }}>{destination.ratings[key]}</span>
-                </div>
-              ))}
-            </div>
-
             {/* Activities */}
             <div className="mb-3">
               <p style={{ fontSize: 10, color: '#8A6A3A', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: 5 }}>
@@ -152,7 +130,7 @@ export default function PostcardBack({ destination, onClose }: Props) {
               <div className="grid grid-cols-2 gap-x-3 gap-y-1">
                 {destination.activities.slice(0, 6).map(a => (
                   <div key={a} className="flex items-start gap-1.5">
-                    <span style={{ color: '#C41E3A', fontSize: 9, marginTop: 2, flexShrink: 0 }}>✦</span>
+                    <span style={{ color: '#C41E3A', fontSize: 9, marginTop: 2, flexShrink: 0 }}>✶</span>
                     <span style={{ fontFamily: 'var(--font-caveat), cursive', fontSize: 'clamp(12px, 1.6vw, 15px)', color: '#3A2010', lineHeight: 1.35 }}>{a}</span>
                   </div>
                 ))}
@@ -166,7 +144,7 @@ export default function PostcardBack({ destination, onClose }: Props) {
               </p>
               {destination.foodHighlights.slice(0, 3).map(f => (
                 <div key={f} className="flex items-start gap-1.5 mb-1">
-                  <span style={{ color: '#D4A853', fontSize: 9, marginTop: 2, flexShrink: 0 }}>✦</span>
+                  <span style={{ color: '#D4A853', fontSize: 9, marginTop: 2, flexShrink: 0 }}>✶</span>
                   <span style={{ fontFamily: 'var(--font-caveat), cursive', fontSize: 'clamp(12px, 1.6vw, 15px)', color: '#3A2010', lineHeight: 1.35 }}>{f}</span>
                 </div>
               ))}
@@ -230,6 +208,23 @@ export default function PostcardBack({ destination, onClose }: Props) {
               {[...Array(6)].map((_, i) => (
                 <div key={i} className="border-b border-[#C0A07055]" style={{ height: 20, marginBottom: 2 }} />
               ))}
+              {/* Mini rating bars */}
+              <div className="mt-3">
+                {BARS.map(({ key, label, color }, idx) => (
+                  <div key={key} className="flex items-center gap-1.5 mb-1.5">
+                    <span style={{ fontSize: 9, color: '#9A7A4A', width: 52, flexShrink: 0, fontStyle: 'italic' }}>{label}</span>
+                    <div className="flex-1 rounded-full" style={{ height: 3, background: '#D4B89044' }}>
+                      <motion.div
+                        className="h-full rounded-full"
+                        style={{ background: color, opacity: 0.6 }}
+                        initial={{ width: 0 }}
+                        animate={{ width: `${destination.ratings[key]}%` }}
+                        transition={{ duration: 0.9, delay: 0.3 + idx * 0.1, ease: 'easeOut' }}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
 
             {/* Destination + CTA */}
@@ -269,7 +264,7 @@ export default function PostcardBack({ destination, onClose }: Props) {
                 whileHover={{ scale: 1.03, boxShadow: '0 0 24px #C41E3A70' }}
                 whileTap={{ scale: 0.97 }}
               >
-                Choose {destination.city} ✦
+                Choose {destination.city} ✶
               </motion.button>
 
               <button

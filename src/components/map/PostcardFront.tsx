@@ -119,17 +119,18 @@ function CssFallback({ destination }: { destination: Destination }) {
 
 interface Props { destination: Destination }
 
+// Try png → jpg → CSS illustration
 export default function PostcardFront({ destination }: Props) {
-  const [imgError, setImgError] = useState(false)
+  const [attempt, setAttempt] = useState<'png' | 'jpg' | 'css'>('png')
 
-  if (!imgError) {
+  if (attempt !== 'css') {
     return (
       <div className="relative w-full h-full overflow-hidden" style={{ borderRadius: 'inherit' }}>
         <img
-          src={`/postcards/${destination.id}.jpg`}
+          src={`/postcards/${destination.id}.${attempt}`}
           alt={`${destination.city}, ${destination.name}`}
           className="w-full h-full object-cover"
-          onError={() => setImgError(true)}
+          onError={() => setAttempt(attempt === 'png' ? 'jpg' : 'css')}
           draggable={false}
         />
       </div>

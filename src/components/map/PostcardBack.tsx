@@ -31,6 +31,25 @@ export default function PostcardBack({ destination, onClose }: Props) {
       className="relative w-full h-full rounded-xl overflow-hidden"
       style={{ background: '#EFD9A8', fontFamily: 'Georgia, serif' }}
     >
+      {/* ── Botanical watermark — very faint centred flower ── */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none" style={{ opacity: 0.055, zIndex: 0 }}>
+        <svg width="220" height="220" viewBox="-110 -110 220 220" aria-hidden="true">
+          {[0,1,2,3,4].map(i => (
+            <ellipse key={`op${i}`} cx={0} cy={-58} rx={20} ry={46}
+              transform={`rotate(${i * 72})`} fill="#8A6A3A" />
+          ))}
+          {[0,1,2,3,4].map(i => (
+            <ellipse key={`ip${i}`} cx={0} cy={-38} rx={13} ry={28}
+              transform={`rotate(${i * 72 + 36})`} fill="#8A6A3A" opacity={0.6} />
+          ))}
+          <circle cx={0} cy={0} r={16} fill="#C0A070" />
+          {[0,1,2,3,4,5].map(i => (
+            <ellipse key={`l${i}`} cx={0} cy={-80} rx={7} ry={16}
+              transform={`rotate(${i * 60 + 10})`} fill="#6A8A5A" opacity={0.5} />
+          ))}
+        </svg>
+      </div>
+
       {/* ── Airmail border stripes ── */}
       <div className="absolute inset-0 pointer-events-none z-10 rounded-xl overflow-hidden">
         <div className="absolute top-0 left-0 right-0 h-4" style={{ backgroundImage: 'repeating-linear-gradient(90deg, #C8102E 0,#C8102E 14px,#fff 14px,#fff 18px,#1235A3 18px,#1235A3 32px,#fff 32px,#fff 36px)' }} />
@@ -188,18 +207,25 @@ export default function PostcardBack({ destination, onClose }: Props) {
             {/* "To:" block */}
             <div>
               <p style={{ fontSize: 12, color: '#8A6A3A', letterSpacing: '0.18em', marginBottom: 4 }}>To:</p>
-              <p style={{
-                fontFamily: 'var(--font-caveat), cursive',
-                fontSize: 'clamp(24px, 3.5vw, 36px)',
-                color: '#1E0E04',
-                fontWeight: 700,
-                lineHeight: 1.1,
-                borderBottom: '1.5px solid #C0A070',
-                paddingBottom: 6,
-                marginBottom: 10,
-              }}>
-                Adelin ♡
-              </p>
+              <div className="relative" style={{ borderBottom: '1.5px solid #C0A070', paddingBottom: 6, marginBottom: 10 }}>
+                <p style={{
+                  fontFamily: 'var(--font-caveat), cursive',
+                  fontSize: 'clamp(24px, 3.5vw, 36px)',
+                  color: '#1E0E04',
+                  fontWeight: 700,
+                  lineHeight: 1.1,
+                }}>
+                  Adelin ♡
+                </p>
+                {/* Tiny white flower beside the name */}
+                <svg className="absolute bottom-2 right-0" width="22" height="22" viewBox="-11 -11 22 22" aria-hidden="true" style={{ opacity: 0.45 }}>
+                  {[0,1,2,3,4].map(i => (
+                    <ellipse key={i} cx={0} cy={-6} rx={2.4} ry={4.5}
+                      transform={`rotate(${i * 72})`} fill="#8A6A3A" />
+                  ))}
+                  <circle cx={0} cy={0} r={2} fill="#C0A070" />
+                </svg>
+              </div>
               {/* Ruled address lines */}
               {[...Array(6)].map((_, i) => (
                 <div key={i} className="border-b border-[#C0A07055]" style={{ height: 20, marginBottom: 2 }} />

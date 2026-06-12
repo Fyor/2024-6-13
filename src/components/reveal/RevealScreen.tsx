@@ -58,9 +58,9 @@ export default function RevealScreen() {
         <ParticleField count={350} heartSide="center" />
       </div>
 
-      {/* Floating petals */}
+      {/* Floating petals — mix of rose teardrops + white blossoms */}
       <div className="absolute inset-0">
-        <FloatingPetals count={20} />
+        <FloatingPetals count={28} type="mixed" />
       </div>
 
       {/* Confetti — rose/crimson palette */}
@@ -93,17 +93,38 @@ export default function RevealScreen() {
         initial="hidden"
         animate="show"
       >
-        {/* Flag */}
-        <motion.div
-          className="text-8xl mb-6"
-          variants={item}
-          animate={{
-            y: [0, -14, 0],
-            rotate: [0, 5, -5, 0],
-          }}
-          transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut', delay: 1.5 }}
-        >
-          {destination.flag}
+        {/* Flag with white blossom wreath */}
+        <motion.div className="relative inline-block mb-6" variants={item}>
+          {/* Wreath ring of white blossoms */}
+          <svg
+            className="absolute inset-0 w-full h-full pointer-events-none"
+            viewBox="0 0 140 140"
+            style={{ top: '-20px', left: '-20px', width: 'calc(100% + 40px)', height: 'calc(100% + 40px)', opacity: 0.55 }}
+            aria-hidden="true"
+          >
+            {[0,1,2,3,4,5,6,7,8,9,10,11].map(i => {
+              const angle = (i / 12) * Math.PI * 2 - Math.PI / 2
+              const cx = 70 + Math.cos(angle) * 50
+              const cy = 70 + Math.sin(angle) * 50
+              return (
+                <g key={i} transform={`translate(${cx},${cy}) rotate(${i * 30})`}>
+                  {[0,1,2,3,4].map(j => (
+                    <ellipse key={j} cx={0} cy={-4.5} rx={1.8} ry={3.5}
+                      transform={`rotate(${j * 72})`} fill="#FFF8F0" />
+                  ))}
+                  <circle cx={0} cy={0} r={1.4} fill="#FFD0A0" />
+                </g>
+              )
+            })}
+          </svg>
+
+          <motion.div
+            className="text-8xl relative z-10"
+            animate={{ y: [0, -14, 0], rotate: [0, 5, -5, 0] }}
+            transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut', delay: 1.5 }}
+          >
+            {destination.flag}
+          </motion.div>
         </motion.div>
 
         <motion.p

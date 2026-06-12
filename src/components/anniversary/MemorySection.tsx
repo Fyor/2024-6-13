@@ -1,8 +1,22 @@
 'use client'
 import { motion } from 'framer-motion'
 import dynamic from 'next/dynamic'
+import FloralDivider from '@/components/ui/FloralDivider'
 
 const FloatingPetals = dynamic(() => import('@/components/ui/FloatingPetals'), { ssr: false })
+
+// Tiny 5-petal ornament for photo corners
+function CornerFlower({ opacity = 0.28 }: { opacity?: number }) {
+  return (
+    <svg width="26" height="26" viewBox="-13 -13 26 26" aria-hidden="true" style={{ opacity }}>
+      {[0,1,2,3,4].map(i => (
+        <ellipse key={i} cx={0} cy={-7} rx={2.8} ry={5}
+          transform={`rotate(${i * 72})`} fill="#FFF8F0" />
+      ))}
+      <circle cx={0} cy={0} r={2.4} fill="#D4A85370" />
+    </svg>
+  )
+}
 
 interface MemorySectionProps {
   caption: string
@@ -27,7 +41,7 @@ export default function MemorySection({
 
   return (
     <section className="relative py-24 px-6 md:px-12 max-w-5xl mx-auto overflow-hidden">
-      <FloatingPetals count={6} />
+      <FloatingPetals count={6} type="mixed" />
 
       <motion.div
         className={`flex flex-col ${isLeft ? 'md:flex-row' : 'md:flex-row-reverse'} gap-10 md:gap-16 items-center`}
@@ -68,6 +82,14 @@ export default function MemorySection({
             <div className="absolute top-4 left-4 text-[10px] uppercase tracking-[0.2em] text-crimson/70 font-body border border-crimson/20 rounded-full px-3 py-1">
               {String(index + 1).padStart(2, '0')}
             </div>
+
+            {/* Flower corner ornaments */}
+            <div className="absolute top-2 right-2 pointer-events-none">
+              <CornerFlower />
+            </div>
+            <div className="absolute bottom-2 left-2 pointer-events-none" style={{ transform: 'rotate(180deg)' }}>
+              <CornerFlower opacity={0.18} />
+            </div>
           </div>
         </motion.div>
 
@@ -92,6 +114,9 @@ export default function MemorySection({
           )}
         </motion.div>
       </motion.div>
+
+      {/* Botanical divider below each memory */}
+      <FloralDivider className="mt-8 opacity-70" />
     </section>
   )
 }

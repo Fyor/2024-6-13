@@ -2,7 +2,8 @@
 import { motion } from 'framer-motion'
 import dynamic from 'next/dynamic'
 
-const ParticleField = dynamic(() => import('@/components/ui/ParticleField'), { ssr: false })
+const ParticleField   = dynamic(() => import('@/components/ui/ParticleField'),   { ssr: false })
+const FloatingPetals  = dynamic(() => import('@/components/ui/FloatingPetals'),  { ssr: false })
 
 export default function HeroSection() {
   return (
@@ -10,6 +11,11 @@ export default function HeroSection() {
       {/* Particle constellation — right half dominant */}
       <div className="absolute inset-0 z-0">
         <ParticleField count={520} heartSide="right" className="opacity-90" />
+      </div>
+
+      {/* White cherry blossom petals drifting down */}
+      <div className="absolute inset-0 z-5 pointer-events-none">
+        <FloatingPetals count={18} type="blossom" />
       </div>
 
       {/* Subtle radial vignette from left */}

@@ -8,27 +8,56 @@ import { photos } from '@/data/photos'
 // Add more entries here as you upload more photos.
 const CAPTIONS = [
   {
-    caption: 'The morning we decided to make it official',
+    caption: 'Our first surprise adventure together!',
     subcaption:
-      'Some decisions feel impossible until suddenly they feel inevitable. That was one of those.',
+      'I will for always remember cutting up your korv, hihihihi. It was the best start of our time together.',
   },
   {
-    caption: "That corner café we said we'd always go back to",
+    caption: 'The emo party at KB when I still lived in Skövde',
     subcaption:
-      'We were there two hours longer than we planned. It felt like exactly the right amount of time.',
+      'It was so fun going out with you as my girl and WOW you looked so gorgeous that evening. That kiss on my neck I can still feel to this day.',
   },
   {
-    caption: 'When everything felt like it was exactly right',
+    caption: 'We have had a loooot of fun together!',
+  },
+  {
+    caption: 'When we went to Liseberg',
     subcaption:
-      'There are moments you recognize only in hindsight. I recognized this one in real time.',
+      'I will never be able to forget that haunted house, walking behind you scared out of my mind. And I still have your drivers license.',
   },
   {
-    caption: 'The little routines we built without noticing',
-    subcaption: 'Somehow the smallest rituals became the things I look forward to most.',
+    caption: 'Oink oink, we did a lot of horsing around. All over Sweden!!',
+    subcaption:
+      'This was our trip when I finally asked you to be my girlfriend! Sexdrega will for ever be ours. And that bridge will be where our love will be locked forever!!!',
   },
   {
-    caption: "Two years. And I'd choose every single moment again.",
-    subcaption: 'Happy anniversary, Adelin.',
+    caption: 'Our Amsterdam time together to the museum',
+    subcaption:
+      'Even in this format I can still see us soo clearly and even here you are STUNNING',
+  },
+  {
+    caption: 'Bzzzzz doing some beekeeping together',
+    subcaption:
+      'I am still so happy you came with to my first try out of the bee game app and doing this together was super fun.',
+  },
+  {
+    caption: 'Our first "Sinterklaas dag" together hihihihi. AND our first christmas.',
+    subcaption:
+      'Christmas time with you was super special! Picking out the tree together and then taking it home on the bike. WE ARE SOOO DUTCH',
+  },
+  {
+    caption: "Stockholm trip at Daniela's place",
+    subcaption:
+      'That coffee together, exploring the city and that sushi mhmmmm soo good! Even the time we spend inside together was only lovely.',
+  },
+  {
+    caption: 'Going to Netherlands for Christmas with my family!',
+    subcaption:
+      'Our first flight together (I think) and from Linköping of all places. Then we got to do so much in the Netherlands.',
+  },
+  {
+    caption:
+      "Our first anniversary together, recreating our trip from that year before. And now we are in the wonky cat house. I can't wait for even more adventures together.",
   },
 ]
 

@@ -232,9 +232,13 @@ export default function EuropeMap({ onRevealReady }: Props) {
                     style={{ transformOrigin: `${dx}px ${dy}px` }}
                   >
                     <text
-                      x={dx + 9} y={above ? dy - 14 : dy + 14}
-                      fontSize="8" fill="#FF9DB2" fillOpacity="0.9"
-                      fontFamily="Georgia, serif" fontStyle="italic"
+                      x={dx} y={above ? dy - 18 : dy + 12}
+                      fontSize="13" textAnchor="middle"
+                    >{dest.flag}</text>
+                    <text
+                      x={dx} y={above ? dy - 6 : dy + 23}
+                      fontSize="7" fill="#FF9DB2" fillOpacity="0.85"
+                      fontFamily="Georgia, serif" fontStyle="italic" textAnchor="middle"
                     >{dest.city}</text>
                   </motion.g>
                 )

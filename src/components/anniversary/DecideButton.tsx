@@ -39,7 +39,7 @@ export default function DecideButton() {
           There&apos;s still one more thing I want to give you...
         </p>
         <p className="font-body text-sm text-dusk mb-12 max-w-xs tracking-wide">
-          Something I&apos;ve been keeping secret for a while.
+          Something we have been wanting to do for a while now.
         </p>
 
         <Link href="/quiz">

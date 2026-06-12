@@ -80,10 +80,10 @@ export default function ParticleField({
       stateRef.current.H = H
 
       const cx = heartSide === 'left' ? W * 0.3 : heartSide === 'right' ? W * 0.68 : W * 0.5
-      const cy = H * 0.44
+      const cy = H * 0.42
       stateRef.current.cx = cx
       stateRef.current.cy = cy
-      const scale = Math.min(W, H) * 0.038
+      const scale = Math.min(W, H) * 0.028
 
       const heartCount = Math.floor(count * 0.68)
       const freeCount  = count - heartCount

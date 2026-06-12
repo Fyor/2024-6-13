@@ -6,10 +6,10 @@ export const quizQuestions: QuizQuestion[] = [
     question: 'Which weekend do you have free?',
     subtext: 'Just asking for a friend 😇',
     options: [
-      { label: 'June 21–22', value: 'jun-21' },
-      { label: 'June 28–29', value: 'jun-28' },
-      { label: 'July 5–6', value: 'jul-5' },
-      { label: 'July 12–13', value: 'jul-12' },
+      { label: '26–28 June', value: 'jun-26' },
+      { label: '3–5 July', value: 'jul-3' },
+      { label: '17–19 July', value: 'jul-17' },
+      { label: '31 July – 2 August', value: 'jul-31' },
     ],
   },
   {

@@ -1,5 +1,6 @@
 'use client'
 import { useState, useEffect, useRef } from 'react'
+import { createPortal } from 'react-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import type { Destination } from '@/lib/types'
 import PostcardFront from './PostcardFront'
@@ -33,7 +34,10 @@ export default function PostcardCard({ destination, index, isSelected, onSelect,
   const [flipped,      setFlipped]      = useState(false)
   const [showFullBack, setShowFullBack] = useState(false)
   const [originRect,   setOriginRect]   = useState<OriginRect | null>(null)
+  const [mounted,      setMounted]      = useState(false)
   const cardRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => { setMounted(true) }, [])
 
   const handleSelect = () => {
     if (cardRef.current) {
@@ -54,6 +58,18 @@ export default function PostcardCard({ destination, index, isSelected, onSelect,
       return () => { clearTimeout(t1); clearTimeout(t2) }
     }
   }, [isSelected])
+
+  // Modal dimensions — fixed 3:2 postcard size, centred with breathing room
+  const modal = originRect ? (() => {
+    const w = Math.min(originRect.vpW - 80, 960)
+    const h = w * (2 / 3)
+    const cardCx = originRect.left + originRect.width  / 2
+    const cardCy = originRect.top  + originRect.height / 2
+    const initX  = cardCx - originRect.vpW / 2
+    const initY  = cardCy - originRect.vpH / 2
+    const scale  = originRect.width / w
+    return { w, h, initX, initY, scale }
+  })() : null
 
   return (
     <>
@@ -85,7 +101,7 @@ export default function PostcardCard({ destination, index, isSelected, onSelect,
           >
             <PostcardFront destination={destination} />
           </div>
-          {/* Back placeholder (real content in fullscreen modal) */}
+          {/* Back placeholder */}
           <div
             className="absolute inset-0 rounded-xl"
             style={{
@@ -113,39 +129,40 @@ export default function PostcardCard({ destination, index, isSelected, onSelect,
         )}
       </motion.div>
 
-      {/* Full-screen postcard back — grows from card's position */}
-      <AnimatePresence>
-        {showFullBack && originRect && (
-          <motion.div
-            className="fixed z-50 overflow-hidden"
-            initial={{
-              top: originRect.top,
-              left: originRect.left,
-              width: originRect.width,
-              height: originRect.height,
-              borderRadius: 12,
-            }}
-            animate={{
-              top: 0,
-              left: 0,
-              width: originRect.vpW,
-              height: originRect.vpH,
-              borderRadius: 0,
-            }}
-            exit={{
-              top: originRect.top,
-              left: originRect.left,
-              width: originRect.width,
-              height: originRect.height,
-              borderRadius: 12,
-              opacity: 0,
-            }}
-            transition={{ duration: 0.52, ease: [0.22, 1, 0.36, 1] }}
-          >
-            <PostcardBack destination={destination} onClose={onClose} />
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Portal: scaled postcard centred on screen, not full-screen */}
+      {mounted && createPortal(
+        <AnimatePresence>
+          {showFullBack && modal && (
+            <>
+              {/* Clickable backdrop */}
+              <motion.div
+                key="backdrop"
+                className="fixed inset-0 z-40 bg-void/80 backdrop-blur-sm"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.3 }}
+                onClick={onClose}
+              />
+
+              {/* Postcard — scales from card position to fixed centre */}
+              <div className="fixed inset-0 z-50 flex items-center justify-center pointer-events-none">
+                <motion.div
+                  className="relative rounded-xl overflow-hidden pointer-events-auto"
+                  style={{ width: modal.w, height: modal.h }}
+                  initial={{ scale: modal.scale, x: modal.initX, y: modal.initY }}
+                  animate={{ scale: 1, x: 0, y: 0 }}
+                  exit={{ scale: modal.scale, x: modal.initX, y: modal.initY, opacity: 0 }}
+                  transition={{ duration: 0.52, ease: [0.22, 1, 0.36, 1] }}
+                >
+                  <PostcardBack destination={destination} onClose={onClose} />
+                </motion.div>
+              </div>
+            </>
+          )}
+        </AnimatePresence>,
+        document.body
+      )}
     </>
   )
 }

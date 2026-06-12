@@ -23,6 +23,22 @@ const EU_IDS = new Set([
 // Destination countries — highlighted slightly brighter
 const DEST_IDS = new Set([752, 826, 250, 276, 616, 40])
 
+// ── Heart path helper ─────────────────────────────────────────────────────────
+// Returns an SVG path d-string for a heart centred at (cx, cy) with half-size r
+function heartPath(cx: number, cy: number, r: number) {
+  const w = r * 1.18   // half-width
+  const h = r * 1.3    // half-height (tip to notch)
+  const c = r * 0.28   // notch depth
+  return [
+    `M ${cx} ${cy - c}`,
+    `C ${cx - c * 0.5} ${cy - h * 1.05} ${cx - w} ${cy - h * 0.6} ${cx - w} ${cy + h * 0.18}`,
+    `C ${cx - w} ${cy + h * 0.85} ${cx} ${cy + h} ${cx} ${cy + h}`,
+    `C ${cx} ${cy + h} ${cx + w} ${cy + h * 0.85} ${cx + w} ${cy + h * 0.18}`,
+    `C ${cx + w} ${cy - h * 0.6} ${cx + c * 0.5} ${cy - h * 1.05} ${cx} ${cy - c}`,
+    'Z',
+  ].join(' ')
+}
+
 // ── Mercator projection matching ComposableMap ────────────────────────────────
 function project(lon: number, lat: number): [number, number] {
   const x = MAP_W / 2 + MAP_SCALE * (lon - MAP_CX) * (Math.PI / 180)
@@ -168,40 +184,55 @@ export default function EuropeMap({ onRevealReady }: Props) {
                 const mx = (sx + dx) / 2 + (dy - sy) * 0.22
                 const my = (sy + dy) / 2 - Math.abs(dx - sx) * 0.16
                 return (
-                  <motion.path
-                    key={dest.id}
-                    d={`M${sx},${sy} Q${mx},${my} ${dx},${dy}`}
-                    stroke="#C41E3A"
-                    strokeWidth="1.8"
-                    fill="none"
-                    strokeLinecap="round"
-                    strokeDasharray="6 5"
-                    filter="url(#rg)"
-                    initial={{ pathLength: 0, opacity: 0 }}
-                    animate={{ pathLength: 1, opacity: 0.92 }}
-                    transition={{
-                      pathLength: { duration: ROUTE_DUR, delay: i * ROUTE_STAG, ease: 'easeOut' },
-                      opacity:    { duration: 0.4, delay: i * ROUTE_STAG },
-                    }}
-                  />
+                  <g key={dest.id}>
+                    <motion.path
+                      d={`M${sx},${sy} Q${mx},${my} ${dx},${dy}`}
+                      stroke="#C41E3A"
+                      strokeWidth="1.8"
+                      fill="none"
+                      strokeLinecap="round"
+                      strokeDasharray="6 5"
+                      filter="url(#rg)"
+                      initial={{ pathLength: 0, opacity: 0 }}
+                      animate={{ pathLength: 1, opacity: 0.92 }}
+                      transition={{
+                        pathLength: { duration: ROUTE_DUR, delay: i * ROUTE_STAG, ease: 'easeOut' },
+                        opacity:    { duration: 0.4, delay: i * ROUTE_STAG },
+                      }}
+                    />
+                    {/* Heart tip — pops in as the route line arrives */}
+                    <motion.path
+                      d={heartPath(dx, dy - 6, 5)}
+                      fill="#C41E3A"
+                      filter="url(#rg)"
+                      initial={{ scale: 0, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      style={{ transformOrigin: `${dx}px ${dy - 6}px` }}
+                      transition={{
+                        type: 'spring',
+                        stiffness: 400,
+                        damping: 14,
+                        delay: i * ROUTE_STAG + ROUTE_DUR - 0.05,
+                      }}
+                    />
+                  </g>
                 )
               })}
 
-              {/* Destination markers + labels */}
+              {/* Destination labels — appear after all routes finish */}
               {showMarkers && destinations.map((dest, i) => {
                 const [dx, dy] = project(...(DEST_COORDS[dest.id] as [number, number]))
                 const above = dest.id === 'north-sweden'
                 return (
                   <motion.g
                     key={dest.id}
-                    initial={{ opacity: 0, scale: 0 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ type: 'spring', stiffness: 280, damping: 16, delay: i * 0.1 }}
+                    initial={{ opacity: 0, y: 4 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.4, delay: i * 0.1 }}
                     style={{ transformOrigin: `${dx}px ${dy}px` }}
                   >
-                    <circle cx={dx} cy={dy} r={5} fill="#C41E3A" filter="url(#rg)" />
                     <text
-                      x={dx + 9} y={above ? dy - 8 : dy + 13}
+                      x={dx + 9} y={above ? dy - 14 : dy + 14}
                       fontSize="8" fill="#FF9DB2" fillOpacity="0.9"
                       fontFamily="Georgia, serif" fontStyle="italic"
                     >{dest.city}</text>

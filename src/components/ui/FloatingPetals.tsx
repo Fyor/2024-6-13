@@ -1,7 +1,7 @@
 'use client'
 import { useEffect, useState } from 'react'
 
-interface Petal {
+interface Particle {
   id: number
   left: number
   delay: number
@@ -11,58 +11,67 @@ interface Petal {
   color: string
   rotate: number
   opacity: number
-  shape: 'petal' | 'blossom'
+  shape: 'petal' | 'rose'
 }
 
-const PETAL_COLORS  = ['#C41E3A', '#E63950', '#FF9DB2', '#D4A853', '#FF6B4A', '#FFF8F0']
-const BLOSSOM_COLORS = ['#FFF8F0', '#FFFFFF', '#FFE8F2', '#FFF0F5', '#FEFEFE', '#FFD6E8']
+// Fallen rose petal (teardrop) colors
+const PETAL_COLORS = ['#C41E3A', '#E63950', '#FF9DB2', '#D4205A', '#9A1228', '#E84070']
+// Rose bloom colors
+const ROSE_COLORS  = ['#C41E3A', '#E04060', '#D4205A', '#B81832', '#E63950', '#A01025']
 
-// 5-petal cherry blossom rendered as an inline SVG
-function Blossom({ size, color, opacity, rotate }: { size: number; color: string; opacity: number; rotate: number }) {
-  const pr = size * 0.9   // petal length
-  const pw = size * 0.38  // petal width
-  const s  = size * 2.8
+// Multi-layer SVG rose viewed from above
+function Rose({ size, color, opacity, rotate }: { size: number; color: string; opacity: number; rotate: number }) {
+  const r  = size
+  const vb = size * 3
   return (
     <svg
-      width={s} height={s}
-      viewBox={`${-s / 2} ${-s / 2} ${s} ${s}`}
+      width={vb} height={vb}
+      viewBox={`${-vb / 2} ${-vb / 2} ${vb} ${vb}`}
       style={{ opacity, transform: `rotate(${rotate}deg)` }}
       aria-hidden="true"
     >
-      {/* Outer petals */}
-      {[0, 1, 2, 3, 4].map(i => (
-        <ellipse key={i} cx={0} cy={-pr} rx={pw} ry={pr}
-          transform={`rotate(${i * 72})`} fill={color} />
+      {/* Outer petals (5) – widest, semi-transparent for depth */}
+      {[0,1,2,3,4].map(i => (
+        <ellipse key={`o${i}`}
+          cx={0} cy={-r * 0.85} rx={r * 0.54} ry={r * 0.85}
+          transform={`rotate(${i * 72})`}
+          fill={color} opacity={0.65} />
       ))}
-      {/* Inner petals — offset 36° for a layered look */}
-      {[0, 1, 2, 3, 4].map(i => (
-        <ellipse key={i} cx={0} cy={-pr * 0.6} rx={pw * 0.65} ry={pr * 0.55}
-          transform={`rotate(${i * 72 + 36})`} fill={color} opacity={0.55} />
+      {/* Middle petals (5) – slightly smaller, offset 36° */}
+      {[0,1,2,3,4].map(i => (
+        <ellipse key={`m${i}`}
+          cx={0} cy={-r * 0.58} rx={r * 0.42} ry={r * 0.6}
+          transform={`rotate(${i * 72 + 36})`}
+          fill={color} opacity={0.82} />
       ))}
-      {/* Stamen centre */}
-      <circle cx={0} cy={0} r={size * 0.28}
-        fill={color === '#FFF8F0' || color === '#FFFFFF' || color === '#FFF0F5' ? '#FFB8C8' : '#FFF8F066'} />
-      <circle cx={0} cy={0} r={size * 0.12} fill="#FFD6A0CC" />
+      {/* Inner petals (5) – tight bud layer, offset 18° */}
+      {[0,1,2,3,4].map(i => (
+        <ellipse key={`i${i}`}
+          cx={0} cy={-r * 0.32} rx={r * 0.27} ry={r * 0.36}
+          transform={`rotate(${i * 72 + 18})`}
+          fill={color} opacity={0.95} />
+      ))}
+      {/* Centre bud */}
+      <circle r={r * 0.2}  fill={color} />
+      <circle r={r * 0.09} fill="#FFD6A0CC" />
     </svg>
   )
 }
 
 export interface FloatingPetalsProps {
   count?: number
-  /** 'petal' = teardrop (default) · 'blossom' = white 5-petal SVG · 'mixed' = both */
-  type?: 'petal' | 'blossom' | 'mixed'
+  /** 'petal' = teardrop rose petal · 'rose' = full SVG rose bloom · 'mixed' = both */
+  type?: 'petal' | 'rose' | 'blossom' | 'mixed'
 }
 
 export default function FloatingPetals({ count = 14, type = 'petal' }: FloatingPetalsProps) {
-  const [petals, setPetals] = useState<Petal[]>([])
+  const [particles, setParticles] = useState<Particle[]>([])
 
   useEffect(() => {
     const colors =
-      type === 'blossom' ? BLOSSOM_COLORS :
-      type === 'mixed'   ? [...PETAL_COLORS, ...BLOSSOM_COLORS] :
-      PETAL_COLORS
+      type === 'petal' ? PETAL_COLORS : ROSE_COLORS
 
-    setPetals(
+    setParticles(
       Array.from({ length: count }, (_, i) => ({
         id: i,
         left: Math.random() * 100,
@@ -74,36 +83,38 @@ export default function FloatingPetals({ count = 14, type = 'petal' }: FloatingP
         rotate: Math.random() * 360,
         opacity: 0.28 + Math.random() * 0.42,
         shape:
-          type === 'blossom' ? 'blossom' :
-          type === 'mixed'   ? (Math.random() > 0.45 ? 'blossom' : 'petal') :
-          'petal',
+          type === 'petal' ? 'petal' :
+          type === 'mixed' ? (Math.random() > 0.4 ? 'rose' : 'petal') :
+          'rose',
       }))
     )
   }, [count, type])
 
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
-      {petals.map(p => (
+      {particles.map(p => (
         <div
           key={p.id}
           className="absolute animate-petal-fall"
           style={{
             left: `${p.left}%`,
-            top: '-50px',
+            top: '-60px',
             animationDelay: `${p.delay}s, ${p.delay * 0.7}s`,
             animationDuration: `${p.duration}s, ${p.swayDuration}s`,
           }}
         >
-          {p.shape === 'blossom' ? (
-            <Blossom size={p.size} color={p.color} opacity={p.opacity} rotate={p.rotate} />
+          {p.shape === 'rose' ? (
+            <Rose size={p.size} color={p.color} opacity={p.opacity} rotate={p.rotate} />
           ) : (
+            /* Fallen rose petal — rounded teardrop */
             <div style={{
-              width: p.size,
-              height: p.size * 1.7,
-              borderRadius: '50% 50% 50% 0',
+              width:  p.size * 0.9,
+              height: p.size * 1.6,
+              borderRadius: '60% 60% 50% 10% / 70% 70% 30% 30%',
               backgroundColor: p.color,
               opacity: p.opacity,
               transform: `rotate(${p.rotate}deg)`,
+              boxShadow: `inset 0 0 ${p.size * 0.3}px rgba(0,0,0,0.15)`,
             }} />
           )}
         </div>

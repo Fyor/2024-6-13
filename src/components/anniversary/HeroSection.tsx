@@ -13,9 +13,9 @@ export default function HeroSection() {
         <ParticleField count={520} heartSide="right" className="opacity-90" />
       </div>
 
-      {/* White cherry blossom petals drifting down */}
+      {/* Rose petals drifting down */}
       <div className="absolute inset-0 z-5 pointer-events-none">
-        <FloatingPetals count={18} type="blossom" />
+        <FloatingPetals count={18} type="rose" />
       </div>
 
       {/* Subtle radial vignette from left */}

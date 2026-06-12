@@ -5,15 +5,25 @@ import type { Destination } from '@/lib/types'
 import PostcardFront from './PostcardFront'
 import PostcardBack from './PostcardBack'
 
+// Cream paper border + layered drop shadow — physical postcard on a dark table
+const PAPER_SHADOW = [
+  '0 0 0 5px #F5ECD7',
+  '0 0 0 6px #A0804066',
+  '0 6px 18px 2px rgba(0,0,0,0.55)',
+  '0 18px 50px 4px rgba(0,0,0,0.5)',
+  '2px 4px 12px rgba(0,0,0,0.35)',
+].join(', ')
+
 interface Props {
   destination: Destination
   index: number
   isSelected: boolean
   onSelect: () => void
   onClose: () => void
+  rotation?: number
 }
 
-export default function PostcardCard({ destination, index, isSelected, onSelect, onClose }: Props) {
+export default function PostcardCard({ destination, index, isSelected, onSelect, onClose, rotation = 0 }: Props) {
   const [flipped,      setFlipped]      = useState(false)
   const [showFullBack, setShowFullBack] = useState(false)
 
@@ -35,11 +45,11 @@ export default function PostcardCard({ destination, index, isSelected, onSelect,
       {/* Grid card */}
       <motion.div
         className="relative cursor-pointer w-full h-full"
-        style={{ perspective: '1200px' }}
+        style={{ perspective: '1200px', rotate: rotation }}
         initial={{ opacity: 0, scale: 0.88, y: 24 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         transition={{ duration: 0.55, delay: index * 0.08, ease: [0.22, 1, 0.36, 1] }}
-        whileHover={!isSelected ? { scale: 1.025, y: -4, zIndex: 2 } : {}}
+        whileHover={!isSelected ? { scale: 1.04, y: -6, rotate: 0, zIndex: 10 } : {}}
         onClick={() => !isSelected && onSelect()}
       >
         <motion.div
@@ -54,7 +64,7 @@ export default function PostcardCard({ destination, index, isSelected, onSelect,
             style={{
               backfaceVisibility: 'hidden',
               WebkitBackfaceVisibility: 'hidden',
-              boxShadow: '0 10px 40px rgba(0,0,0,0.55), 0 2px 8px rgba(0,0,0,0.4)',
+              boxShadow: PAPER_SHADOW,
             }}
           >
             <PostcardFront destination={destination} />
@@ -67,6 +77,7 @@ export default function PostcardCard({ destination, index, isSelected, onSelect,
               WebkitBackfaceVisibility: 'hidden',
               transform: 'rotateY(180deg)',
               background: '#F0DFB8',
+              boxShadow: PAPER_SHADOW,
             }}
           />
         </motion.div>

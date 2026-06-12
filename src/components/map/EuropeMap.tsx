@@ -55,7 +55,7 @@ const DEST_COORDS: Record<string, [number, number]> = {
   england:        [-0.1, 51.5],
   france:         [2.4,  48.9],
   germany:        [7.5,  51.5],
-  poland:         [19.9, 50.1],
+  poland:         [18.6, 54.4],
   austria:        [16.4, 48.2],
   'north-sweden': [20.2, 67.9],
 }

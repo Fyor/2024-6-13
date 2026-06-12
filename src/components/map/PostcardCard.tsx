@@ -14,98 +14,101 @@ interface Props {
 }
 
 export default function PostcardCard({ destination, index, isSelected, onSelect, onClose }: Props) {
-  const [flipped, setFlipped] = useState(false)
+  const [flipped,      setFlipped]      = useState(false)
   const [showFullBack, setShowFullBack] = useState(false)
 
-  // When selected: flip first, then show full back
   useEffect(() => {
     if (isSelected) {
       setFlipped(true)
-      const t = setTimeout(() => setShowFullBack(true), 550)
+      const t = setTimeout(() => setShowFullBack(true), 500)
       return () => clearTimeout(t)
     } else {
-      setShowFullBack(false)
-      setFlipped(false)
+      // Small delay so the fullscreen back can animate out first
+      const t1 = setTimeout(() => setShowFullBack(false), 50)
+      const t2 = setTimeout(() => setFlipped(false), 100)
+      return () => { clearTimeout(t1); clearTimeout(t2) }
     }
   }, [isSelected])
 
   return (
     <>
-      {/* Grid card with flip animation */}
+      {/* Grid card */}
       <motion.div
-        className="relative cursor-pointer"
-        style={{ perspective: '1000px', aspectRatio: '3/2' }}
-        initial={{ opacity: 0, y: 32, scale: 0.92 }}
-        animate={{ opacity: 1, y: 0, scale: 1 }}
-        transition={{ duration: 0.55, delay: index * 0.1, ease: [0.22, 1, 0.36, 1] }}
-        whileHover={!isSelected ? { y: -6, scale: 1.02 } : {}}
+        className="relative cursor-pointer w-full h-full"
+        style={{ perspective: '1200px' }}
+        initial={{ opacity: 0, scale: 0.88, y: 24 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        transition={{ duration: 0.55, delay: index * 0.08, ease: [0.22, 1, 0.36, 1] }}
+        whileHover={!isSelected ? { scale: 1.025, y: -4, zIndex: 2 } : {}}
         onClick={() => !isSelected && onSelect()}
       >
         <motion.div
-          style={{ transformStyle: 'preserve-3d', width: '100%', height: '100%' }}
+          className="w-full h-full"
+          style={{ transformStyle: 'preserve-3d' }}
           animate={{ rotateY: flipped ? 180 : 0 }}
-          transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: 0.52, ease: [0.22, 1, 0.36, 1] }}
         >
-          {/* Front face */}
+          {/* Front */}
           <div
             className="absolute inset-0 rounded-xl overflow-hidden"
             style={{
               backfaceVisibility: 'hidden',
               WebkitBackfaceVisibility: 'hidden',
-              boxShadow: '0 8px 32px rgba(0,0,0,0.45), 0 2px 8px rgba(0,0,0,0.3)',
+              boxShadow: '0 10px 40px rgba(0,0,0,0.55), 0 2px 8px rgba(0,0,0,0.4)',
             }}
           >
             <PostcardFront destination={destination} />
           </div>
-          {/* Back face (visible during flip, hidden by fullscreen modal) */}
+          {/* Back placeholder (real content in fullscreen modal) */}
           <div
-            className="absolute inset-0 rounded-xl overflow-hidden"
+            className="absolute inset-0 rounded-xl"
             style={{
               backfaceVisibility: 'hidden',
               WebkitBackfaceVisibility: 'hidden',
               transform: 'rotateY(180deg)',
-              boxShadow: '0 8px 32px rgba(0,0,0,0.45)',
+              background: '#F0DFB8',
             }}
-          >
-            <div className="w-full h-full" style={{ background: '#F0DFB8' }} />
-          </div>
+          />
         </motion.div>
 
-        {/* Hover label */}
+        {/* Hover hint */}
         {!isSelected && (
-          <div className="absolute inset-0 rounded-xl flex items-end justify-center pb-3 opacity-0 hover:opacity-100 transition-opacity pointer-events-none"
-            style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.55) 0%, transparent 50%)' }}>
-            <span className="font-body text-xs text-cream/90 tracking-widest uppercase">
-              Tap to explore
+          <motion.div
+            className="absolute inset-0 rounded-xl flex items-center justify-center pointer-events-none"
+            initial={{ opacity: 0 }}
+            whileHover={{ opacity: 1 }}
+            style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.1) 60%, transparent 100%)' }}
+          >
+            <span className="absolute bottom-4 left-1/2 -translate-x-1/2 font-body text-xs text-cream/80 tracking-widest uppercase">
+              Tap to open
             </span>
-          </div>
+          </motion.div>
         )}
       </motion.div>
 
-      {/* Full-screen postcard back */}
+      {/* Full-screen postcard back — zooms out from centre */}
       <AnimatePresence>
         {showFullBack && (
           <motion.div
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-8"
+            className="fixed inset-0 z-50 flex items-center justify-center p-6 md:p-10"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.25 }}
+            transition={{ duration: 0.2 }}
           >
-            {/* Backdrop */}
+            {/* Blurred backdrop */}
             <motion.div
-              className="absolute inset-0 bg-void/90 backdrop-blur-sm"
+              className="absolute inset-0 bg-void/85 backdrop-blur-md"
               onClick={onClose}
             />
-
-            {/* Postcard back — fills available space with correct aspect ratio */}
+            {/* Postcard — zooms out from a tiny dot at centre */}
             <motion.div
-              className="relative w-full z-10"
-              style={{ maxWidth: 900, maxHeight: '90vh', aspectRatio: '3/2' }}
-              initial={{ scale: 0.72, opacity: 0 }}
+              className="relative z-10 w-full"
+              style={{ maxWidth: 960, aspectRatio: '3/2' }}
+              initial={{ scale: 0.04, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.72, opacity: 0 }}
-              transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+              exit={{ scale: 0.04, opacity: 0 }}
+              transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
             >
               <PostcardBack destination={destination} onClose={onClose} />
             </motion.div>

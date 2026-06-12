@@ -1,4 +1,9 @@
+const BASE = process.env.NEXT_PUBLIC_BASE_PATH ?? ''
+
 export function flagUrl(flag: string): string {
-  const codePoints = [...flag].map(c => c.codePointAt(0)!.toString(16))
-  return `https://cdn.jsdelivr.net/npm/twemoji@14.0.2/assets/svg/${codePoints.join('-')}.svg`
+  const cc = [...flag]
+    .map(c => String.fromCharCode(c.codePointAt(0)! - 0x1F1E6 + 65))
+    .join('')
+    .toLowerCase()
+  return `${BASE}/flags/${cc}.svg`
 }

@@ -125,22 +125,39 @@ function getCandidates(id: string) {
   return IMAGE_CANDIDATES[id] ?? [id]
 }
 
+const BASE = process.env.NEXT_PUBLIC_BASE_PATH ?? ''
+
 interface Props { destination: Destination }
 
-// Try every candidate slug × [png, jpg], then CSS fallback
+// Try every candidate slug × [png, jpg], then CSS fallback.
+// Portrait images (taller than wide) get a blurred backdrop so they fill the card nicely.
 export default function PostcardFront({ destination }: Props) {
   const candidates = getCandidates(destination.id)
-  // Flat list: [slug0.png, slug0.jpg, slug1.png, slug1.jpg, ...]
-  const srcs = candidates.flatMap(s => [`/postcards/${s}.png`, `/postcards/${s}.jpg`])
-  const [idx, setIdx] = useState(0)
+  const srcs = candidates.flatMap(s => [`${BASE}/postcards/${s}.png`, `${BASE}/postcards/${s}.jpg`])
+  const [idx,      setIdx]      = useState(0)
+  const [portrait, setPortrait] = useState(false)
 
   if (idx < srcs.length) {
     return (
-      <div className="relative w-full h-full overflow-hidden" style={{ borderRadius: 'inherit' }}>
+      <div className="relative w-full h-full overflow-hidden bg-void" style={{ borderRadius: 'inherit' }}>
+        {portrait && (
+          <img
+            src={srcs[idx]}
+            aria-hidden
+            draggable={false}
+            className="absolute inset-0 w-full h-full object-cover scale-110 opacity-60"
+            style={{ filter: 'blur(14px)' }}
+          />
+        )}
         <img
           src={srcs[idx]}
           alt={`${destination.city}, ${destination.name}`}
-          className="w-full h-full object-cover"
+          className="relative w-full h-full"
+          style={{ objectFit: portrait ? 'contain' : 'cover' }}
+          onLoad={e => {
+            const img = e.currentTarget
+            setPortrait(img.naturalHeight > img.naturalWidth * 1.15)
+          }}
           onError={() => setIdx(i => i + 1)}
           draggable={false}
         />

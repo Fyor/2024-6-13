@@ -1,4 +1,5 @@
 'use client'
+import { useState } from 'react'
 import { motion } from 'framer-motion'
 import dynamic from 'next/dynamic'
 import FloralDivider from '@/components/ui/FloralDivider'
@@ -26,6 +27,8 @@ interface MemorySectionProps {
   gradientVia?: string
   gradientTo: string
   index: number
+  imageSrc?: string    // e.g. /photos/2024-06-13.jpg
+  dateLabel?: string   // e.g. "June 13, 2024"
 }
 
 export default function MemorySection({
@@ -36,8 +39,11 @@ export default function MemorySection({
   gradientVia,
   gradientTo,
   index,
+  imageSrc,
+  dateLabel,
 }: MemorySectionProps) {
   const isLeft = align === 'left'
+  const [portrait, setPortrait] = useState(false)
 
   return (
     <section className="relative py-24 px-6 md:px-12 max-w-5xl mx-auto overflow-hidden">
@@ -61,12 +67,28 @@ export default function MemorySection({
           <div
             className={`aspect-[4/3] rounded-2xl bg-gradient-to-br ${gradientFrom} ${gradientVia ?? ''} ${gradientTo} relative overflow-hidden border border-wine/20`}
           >
-            <img
-              src={`/images/memory-${index + 1}.jpg`}
-              alt=""
-              className="absolute inset-0 w-full h-full object-cover"
-              onError={(e) => { ;(e.target as HTMLImageElement).style.display = 'none' }}
-            />
+            {/* Actual photo — blurred backdrop handles portrait images */}
+            {imageSrc && portrait && (
+              <img
+                src={imageSrc}
+                aria-hidden
+                className="absolute inset-0 w-full h-full object-cover scale-110 opacity-60"
+                style={{ filter: 'blur(16px)' }}
+              />
+            )}
+            {imageSrc && (
+              <img
+                src={imageSrc}
+                alt=""
+                className="absolute inset-0 w-full h-full"
+                style={{ objectFit: portrait ? 'contain' : 'cover' }}
+                onLoad={e => {
+                  const img = e.currentTarget
+                  setPortrait(img.naturalHeight > img.naturalWidth * 1.15)
+                }}
+              />
+            )}
+
             {/* Grain overlay */}
             <div
               className="absolute inset-0 opacity-30"
@@ -76,18 +98,18 @@ export default function MemorySection({
                 mixBlendMode: 'overlay',
               }}
             />
-            <div className="absolute inset-0 bg-gradient-to-tr from-void/30 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-void/60 via-transparent to-transparent" />
 
-            {/* Memory number badge */}
-            <div className="absolute top-4 left-4 text-[10px] uppercase tracking-[0.2em] text-crimson/70 font-body border border-crimson/20 rounded-full px-3 py-1">
-              {String(index + 1).padStart(2, '0')}
+            {/* Date badge (or number fallback) */}
+            <div className="absolute bottom-4 left-4 text-[10px] uppercase tracking-[0.2em] text-crimson/80 font-body border border-crimson/25 rounded-full px-3 py-1 bg-void/50 backdrop-blur-sm">
+              {dateLabel ?? String(index + 1).padStart(2, '0')}
             </div>
 
             {/* Flower corner ornaments */}
             <div className="absolute top-2 right-2 pointer-events-none">
               <CornerFlower />
             </div>
-            <div className="absolute bottom-2 left-2 pointer-events-none" style={{ transform: 'rotate(180deg)' }}>
+            <div className="absolute bottom-2 right-2 pointer-events-none" style={{ transform: 'rotate(180deg)' }}>
               <CornerFlower opacity={0.18} />
             </div>
           </div>

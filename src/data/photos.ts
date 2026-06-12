@@ -6,4 +6,60 @@ export interface Photo {
   label: string
 }
 
-export const photos: Photo[] = []
+export const photos: Photo[] = [
+  {
+    "src": "/images/20240320_220614.jpg",
+    "date": "2024-03-20",
+    "label": "March 20, 2024"
+  },
+  {
+    "src": "/images/20240322_223239.jpg",
+    "date": "2024-03-22",
+    "label": "March 22, 2024"
+  },
+  {
+    "src": "/images/20240606_140609.jpg",
+    "date": "2024-06-06",
+    "label": "June 6, 2024"
+  },
+  {
+    "src": "/images/20240606_201747.jpg",
+    "date": "2024-06-06",
+    "label": "June 6, 2024"
+  },
+  {
+    "src": "/images/20240614_160349.jpg",
+    "date": "2024-06-14",
+    "label": "June 14, 2024"
+  },
+  {
+    "src": "/images/20240801_162224.jpg",
+    "date": "2024-08-01",
+    "label": "August 1, 2024"
+  },
+  {
+    "src": "/images/20240924_120438.jpg",
+    "date": "2024-09-24",
+    "label": "September 24, 2024"
+  },
+  {
+    "src": "/images/20241205_221750.jpg",
+    "date": "2024-12-05",
+    "label": "December 5, 2024"
+  },
+  {
+    "src": "/images/20241214_110548.jpg",
+    "date": "2024-12-14",
+    "label": "December 14, 2024"
+  },
+  {
+    "src": "/images/20241226_174006.jpg",
+    "date": "2024-12-26",
+    "label": "December 26, 2024"
+  },
+  {
+    "src": "/images/20250614_135111.jpg",
+    "date": "2025-06-14",
+    "label": "June 14, 2025"
+  }
+]

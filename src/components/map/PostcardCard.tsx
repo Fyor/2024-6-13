@@ -1,9 +1,15 @@
 'use client'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import type { Destination } from '@/lib/types'
 import PostcardFront from './PostcardFront'
 import PostcardBack from './PostcardBack'
+
+interface OriginRect {
+  top: number; left: number
+  width: number; height: number
+  vpW: number; vpH: number
+}
 
 // Cream paper border + layered drop shadow — physical postcard on a dark table
 const PAPER_SHADOW = [
@@ -26,6 +32,16 @@ interface Props {
 export default function PostcardCard({ destination, index, isSelected, onSelect, onClose, rotation = 0 }: Props) {
   const [flipped,      setFlipped]      = useState(false)
   const [showFullBack, setShowFullBack] = useState(false)
+  const [originRect,   setOriginRect]   = useState<OriginRect | null>(null)
+  const cardRef = useRef<HTMLDivElement>(null)
+
+  const handleSelect = () => {
+    if (cardRef.current) {
+      const r = cardRef.current.getBoundingClientRect()
+      setOriginRect({ top: r.top, left: r.left, width: r.width, height: r.height, vpW: window.innerWidth, vpH: window.innerHeight })
+    }
+    onSelect()
+  }
 
   useEffect(() => {
     if (isSelected) {
@@ -33,7 +49,6 @@ export default function PostcardCard({ destination, index, isSelected, onSelect,
       const t = setTimeout(() => setShowFullBack(true), 500)
       return () => clearTimeout(t)
     } else {
-      // Small delay so the fullscreen back can animate out first
       const t1 = setTimeout(() => setShowFullBack(false), 50)
       const t2 = setTimeout(() => setFlipped(false), 100)
       return () => { clearTimeout(t1); clearTimeout(t2) }
@@ -44,13 +59,14 @@ export default function PostcardCard({ destination, index, isSelected, onSelect,
     <>
       {/* Grid card */}
       <motion.div
+        ref={cardRef}
         className="relative cursor-pointer w-full h-full"
         style={{ perspective: '1200px', rotate: rotation }}
         initial={{ opacity: 0, scale: 0.88, y: 24 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         transition={{ duration: 0.55, delay: index * 0.08, ease: [0.22, 1, 0.36, 1] }}
         whileHover={!isSelected ? { scale: 1.04, y: -6, rotate: 0, zIndex: 10 } : {}}
-        onClick={() => !isSelected && onSelect()}
+        onClick={() => !isSelected && handleSelect()}
       >
         <motion.div
           className="w-full h-full"
@@ -97,32 +113,36 @@ export default function PostcardCard({ destination, index, isSelected, onSelect,
         )}
       </motion.div>
 
-      {/* Full-screen postcard back — zooms out from centre */}
+      {/* Full-screen postcard back — grows from card's position */}
       <AnimatePresence>
-        {showFullBack && (
+        {showFullBack && originRect && (
           <motion.div
-            className="fixed inset-0 z-50 flex items-center justify-center p-6 md:p-10"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
+            className="fixed z-50 overflow-hidden"
+            initial={{
+              top: originRect.top,
+              left: originRect.left,
+              width: originRect.width,
+              height: originRect.height,
+              borderRadius: 12,
+            }}
+            animate={{
+              top: 0,
+              left: 0,
+              width: originRect.vpW,
+              height: originRect.vpH,
+              borderRadius: 0,
+            }}
+            exit={{
+              top: originRect.top,
+              left: originRect.left,
+              width: originRect.width,
+              height: originRect.height,
+              borderRadius: 12,
+              opacity: 0,
+            }}
+            transition={{ duration: 0.52, ease: [0.22, 1, 0.36, 1] }}
           >
-            {/* Blurred backdrop */}
-            <motion.div
-              className="absolute inset-0 bg-void/85 backdrop-blur-md"
-              onClick={onClose}
-            />
-            {/* Postcard — zooms out from a tiny dot at centre */}
-            <motion.div
-              className="relative z-10 w-full"
-              style={{ maxWidth: 960, aspectRatio: '3/2' }}
-              initial={{ scale: 0.04, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.04, opacity: 0 }}
-              transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-            >
-              <PostcardBack destination={destination} onClose={onClose} />
-            </motion.div>
+            <PostcardBack destination={destination} onClose={onClose} />
           </motion.div>
         )}
       </AnimatePresence>
